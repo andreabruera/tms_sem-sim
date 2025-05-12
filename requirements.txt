@@ -1,0 +1,7 @@
+matplotlib
+mne
+numpy
+pingouin
+scipy
+tqdm
+sklearn
