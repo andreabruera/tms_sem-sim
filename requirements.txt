@@ -5,3 +5,6 @@ pingouin
 scipy
 tqdm
 sklearn
+transformers
+torch
+fasttext
