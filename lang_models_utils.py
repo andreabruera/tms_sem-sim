@@ -18,9 +18,9 @@ class ContextualizedModelCard:
         self.causal = causal
         self.model_name, self.to_cuda = self.read_names(args)
         self.cuda_device = 'cuda:{}'.format(0)
-        self.model = self.load_model()
+        self.model = self.load_model(args)
         self.required_shape, self.max_len, self.n_layers = self.read_details()
-        self.tokenizer = self.load_tokenizer()
+        self.tokenizer = self.load_tokenizer(args)
 
     def read_names(self, args):
         to_cuda = True
@@ -44,8 +44,8 @@ class ContextualizedModelCard:
 
         return model_name, to_cuda
 
-    def load_model(self):
-        cache = os.path.join('/', 'data', 'tu_bruera', 'hf_models')
+    def load_model(self, args):
+        cache = os.path.join('models', args.lang)
         os.makedirs(cache, exist_ok=True)
         if not self.causal:
             model = AutoModel.from_pretrained(
@@ -77,8 +77,8 @@ class ContextualizedModelCard:
 
         return required_shape, max_len, n_layers
 
-    def load_tokenizer(self):
-        cache = os.path.join('/', 'data', 'tu_bruera', 'hf_tokenizers')
+    def load_tokenizer(self, args):
+        cache = os.path.join('models', args.lang)
         os.makedirs(cache, exist_ok=True)
         tokenizer = AutoTokenizer.from_pretrained(
                                                   self.model_name, 
@@ -92,7 +92,7 @@ class ContextualizedModelCard:
 
 def read_words(args):
     ### reading words per experiment
-    w_path = os.path.join('..', 'trials', args.language, '{}#trials.tsv'.format(args.dataset))
+    w_path = os.path.join('trials', args.language, '{}#trials.tsv'.format(args.dataset))
     assert os.path.exists(w_path)
     words = set()
     with open(w_path) as i:
@@ -109,7 +109,7 @@ def read_words(args):
 
 def read_all_sentences(args):
     ### reading words per experiment
-    w_path = os.path.join('..', 'trials', args.lang, '{}#trials.tsv'.format(args.dataset))
+    w_path = os.path.join('trials', args.lang, '{}#trials.tsv'.format(args.dataset))
     assert os.path.exists(w_path)
     words = set()
     with open(w_path) as i:
@@ -164,7 +164,7 @@ def read_all_sentences(args):
 
 def read_pairs(args):
     ### reading words per experiment
-    w_path = os.path.join('..', 'trials', args.lang, '{}#trials.tsv'.format(args.dataset))
+    w_path = os.path.join('trials', args.lang, '{}#trials.tsv'.format(args.dataset))
     assert os.path.exists(w_path)
     cases = {args.dataset : set()}
     ws = list()

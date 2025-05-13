@@ -8,17 +8,12 @@ from test_utils import social_test, test_model
 def load_wac_freqs(args):
     base_folder = os.path.join(
                             '/',
-                            'data',
-                            'tu_bruera',
                             'counts',
                            args.lang, 
                            'wac',
                            )
     if args.lang == 'de':
-        if 'cc100' not in args.model and 'tagged_wiki' not in args.model:
-            case = 'cased'
-        else:
-            case = 'uncased'
+        case = 'cased'
     else:
         case = 'uncased'
     #print(min_count)
@@ -52,17 +47,6 @@ def test_coocs_model(args, key, datasets, present_words, trans_from_en, coocs, v
     model = {k : v for k, v in trans_pmi_vecs.items()}
     #curr_vocab = [w for w in trans_pmi_vecs.keys()]
     test_model(args, key, model, row_words, datasets, present_words, trans_from_en)
-
-def read_mitchell_25dims(lang):
-    dimensions = list()
-    with open(os.path.join('data', 'fmri', 'mitchell', 'mitchell_dimensions_{}.tsv'.format(lang))) as i:
-        for l in i:
-            line = l.strip().split()
-            assert len(line) >= 2
-            dimensions.append(line)
-    assert len(dimensions) == 25
-
-    return dimensions
 
 def build_coocs_vecs(args, coocs, row_words, vocab):
     pmi_mtrx = numpy.array(
@@ -132,34 +116,14 @@ def build_ppmi_vecs(coocs, vocab, row_words, col_words, smoothing=False, power=1
 
 def load_count_coocs(args):
     print(args.model)
-    if args.lang == 'en':
-        if 'bnc' in args.model:
-            min_count = 10
-        elif 'cc100' in args.model:
-            min_count = 500
-        else:
-            min_count = 10
-    else:
-        if 'cc100' in args.model:
-            if args.lang == 'it':
-                min_count = 10
-            else:
-                min_count = 100
-        else:
-            min_count = 10
+    min_count = 10
     if args.lang == 'de':
-        if 'cc100' not in args.model and 'tagged_wiki' not in args.model:
-            case = 'cased'
-        else:
-            case = 'uncased'
+        case = 'cased'
     else:
         case = 'uncased'
     #print(min_count)
     f = args.model.split('-')[0]
     base_folder = os.path.join(
-                            '/',
-                            'data',
-                            'tu_bruera',
                             'counts',
                            args.lang, 
                            f,

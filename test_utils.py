@@ -15,6 +15,23 @@ from behav_loaders import read_italian_anew, read_german_behav
 from tms_loaders import read_it_social_quantity_tms, read_it_distr_learn_tms, read_de_pmtg_production_tms, read_phil, read_de_sem_phon_tms
 from utf_utils import transform_german_word, transform_italian_word
 
+def load_dataset(args):
+    if 'de_behav' in args.dataset:
+        data, vocab = read_german_behav(args)
+    if 'it_anew' in args.dataset:
+        data, vocab = read_italian_anew(args)
+    if 'pmtg-prod' in args.dataset:
+        data, vocab = read_de_pmtg_production_tms(args)
+    if 'sem-phon' in args.dataset:
+        data, vocab = read_de_sem_phon_tms(args)
+    if 'distr-learn' in args.dataset:
+        data, vocab = read_it_distr_learn_tms(args)
+    if 'sound-action' in args.dataset:
+        data, vocab = read_phil(args)
+    if 'social-quantity' in args.dataset:
+        data, vocab = read_it_social_quantity_tms(args)
+    return vocab, data
+
 def test_precomputed_model(args, model_name, datasets, datasets_vocab, freqs):
     model_sims, model_vocab = read_sims(args, model_name)
     missing_words = list(set(datasets_vocab).difference(set(model_vocab)))

@@ -55,7 +55,7 @@ entity_vectors = extract_surpr(
                                current_model,
                                cases,
                                )
-out_f = os.path.join('llm_surprisals', args.lang, args.model)
+out_f = os.path.join('llm_models', 'llm_surprisals', args.lang, args.model)
 os.makedirs(out_f, exist_ok=True)
 
 print(current_model.n_layers, current_model.required_shape, )

@@ -46,8 +46,10 @@ parser.add_argument(
                     )
 args = parser.parse_args()
 
-ws, replication_sentences = read_all_sentences(args)
-ws = {k : list() for k in ws}
+#ws, replication_sentences = read_all_sentences(args)
+#ws = {k : list() for k in ws}
+cases = read_pairs(args)
+ws = {k : list() for _ in cases.values() for __ in _ for k in __.split(' [SEP] ')}
 
 current_model = ContextualizedModelCard(args)
 
@@ -57,7 +59,7 @@ entity_vectors, entity_sentences = extract_vectors(
                                                    ws,
                                                    isolated=True,
                                                    )
-out_f = os.path.join('llm_vectors', args.lang, args.corpus, '{}-iso'.format(args.model))
+out_f = os.path.join('llm_models', 'llm_vectors', args.lang, args.corpus, '{}-iso'.format(args.model))
 os.makedirs(out_f, exist_ok=True)
 
 print(current_model.n_layers, current_model.required_shape, )

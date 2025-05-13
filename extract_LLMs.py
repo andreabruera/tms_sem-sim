@@ -40,7 +40,7 @@ entity_vectors, entity_sentences = extract_vectors(
                                                    current_model,
                                                    replication_sentences,
                                                    )
-out_f = os.path.join('llm_vectors', args.lang, args.corpus, args.model)
+out_f = os.path.join('llm_models', 'llm_vectors', args.lang, args.corpus, args.model)
 os.makedirs(out_f, exist_ok=True)
 
 print(current_model.n_layers, current_model.required_shape, )

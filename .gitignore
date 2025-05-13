@@ -1,3 +1,9 @@
+models/de/*
+models/it/*
+counts/it/wac/*
+counts/de/wac/*
+llm_models/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -8,6 +8,7 @@ from loaders_utils import collect_info, reorganize_sims, write_trials
 from utf_utils import transform_german_word, transform_italian_word
 
 def read_de_pmtg_production_tms(args):
+    print('\nPiai et al. - picture naming with interference\n')
     lines = list()
     missing = 0
     with open(os.path.join(
@@ -55,23 +56,15 @@ def read_de_pmtg_production_tms(args):
             subjects = [int(l[header.index('sbj')]) for l in current_cond]
             #vocab_w_ones = [w for l in current_cond for w in transform_german_word(l[header.index('picture')].split('.')[0])]
             vocab_w_ones = [l[header.index('picture')].split('.')[0] for l in current_cond]
-            if args.lang == 'de' and ('cc100' in args.model or 'wiki' in args.model):
-                vocab_w_ones = [w.lower() for w in vocab_w_ones]
             test_vocab = test_vocab.union(set(vocab_w_ones))
             vocab_w_twos = [l[header.index('distractor')] for l in current_cond]
-            if args.lang == 'de' and ('cc100' in args.model or 'wiki' in args.model):
-                vocab_w_twos = [w.lower() for w in vocab_w_twos]
             test_vocab = test_vocab.union(set(vocab_w_twos))
             ### picture -> word
             #w_ones = [l[header.index('picture')].split('.')[0] for l in current_cond]
             #w_twos = [l[header.index('distractor')].strip() for l in current_cond]
             ### word -> picture
-            if args.lang == 'de' and ('cc100' in args.model or 'wiki' in args.model):
-                w_ones = [l[header.index('distractor')].strip().lower() for l in current_cond]
-                w_twos = [l[header.index('picture')].split('.')[0].lower() for l in current_cond]
-            else:
-                w_ones = [l[header.index('distractor')].strip() for l in current_cond]
-                w_twos = [l[header.index('picture')].split('.')[0] for l in current_cond]
+            w_ones = [l[header.index('distractor')].strip() for l in current_cond]
+            w_twos = [l[header.index('picture')].split('.')[0] for l in current_cond]
             all_sims[key]= [(sub, (w_one, w_two), rt) for sub, w_one, w_two, rt in zip(subjects, w_ones, w_twos, log_rts)]
             triples = triples.union(set([v[1] for v in all_sims[key]]))
     final_sims = reorganize_sims(all_sims)
@@ -83,6 +76,7 @@ def read_de_pmtg_production_tms(args):
 ### Dataset #2: Klaus & Hartwigsen
 
 def read_de_sem_phon_tms(args):
+    print('\nKlaus & Hartwigsen - Semantic production\n')
     sims = dict()
     test_vocab = set()
     lines = list()
@@ -156,21 +150,13 @@ def read_de_sem_phon_tms(args):
             log_rts = [numpy.log10(float(l[header.index('RT')])) for l in current_cond]
             #vocab_w_ones = [w for l in current_cond for w in transform_german_word(l[header.index('item')].split('.')[0])]
             vocab_w_ones = [l[header.index('item')].split('.')[0] for l in current_cond]
-            if args.lang == 'de' and ('cc100' in args.model or 'wiki' in args.model):
-                vocab_w_ones = [w.lower() for w in vocab_w_ones]
             test_vocab = test_vocab.union(set(vocab_w_ones))
             #vocab_w_twos = [w for l in current_cond for w in transform_german_word(l[header.index('utterance')])]
             vocab_w_twos = [l[header.index('utterance')] for l in current_cond]
-            if args.lang == 'de' and ('cc100' in args.model or 'wiki' in args.model):
-                vocab_w_twos = [w.lower() for w in vocab_w_twos]
             test_vocab = test_vocab.union(set(vocab_w_twos))
             ### image -> utterance
-            if args.lang == 'de' and ('cc100' in args.model or 'wiki' in args.model):
-                w_ones = [l[header.index('item')].split('.')[0].lower() for l in current_cond]
-                w_twos = [l[header.index('utterance')].lower() for l in current_cond]
-            else:
-                w_ones = [l[header.index('item')].split('.')[0] for l in current_cond]
-                w_twos = [l[header.index('utterance')] for l in current_cond]
+            w_ones = [l[header.index('item')].split('.')[0] for l in current_cond]
+            w_twos = [l[header.index('utterance')] for l in current_cond]
             sims[name]= [(sub, (w_one, w_two), rt) for sub, w_one, w_two, rt in zip(subjects, w_ones, w_twos, log_rts)]
             triples = triples.union(set([v[1] for v in sims[name]]))
     full_sims = reorganize_sims(sims)
@@ -183,6 +169,7 @@ def read_de_sem_phon_tms(args):
 ### Dataset #3: Gatti et al.
 
 def read_it_distr_learn_tms(args):
+    print('\nGatti et al. - Semantic relatedness judgment\n')
     lines = list()
     with open(os.path.join(
                            'data',
@@ -254,6 +241,7 @@ def read_it_distr_learn_tms(args):
 ### Dataset #4: Kuhnke et al.
 
 def read_phil(args):
+    print('\nKuhnke et al. - Semantic feature judgment\n')
     ### reading dataset
     lines = list()
     proto = dict()
@@ -328,15 +316,10 @@ def read_phil(args):
                 elif proto_mode == 'both-neg-all':
                     proto_key = ['__',]
                 w_ones = [tuple([w for k in proto_key for w in proto[k]]) for l in current_cond]
-                if args.lang == 'de' and ('cc100' in args.model or 'wiki' in args.model):
-                    w_ones = [(w.lower() for w in ws) for ws in w_ones]
                 all_w_ones = [tuple([w]) for ws in w_ones for w in ws]
                 test_vocab = test_vocab.union(set([w for ws in all_w_ones for w in ws]))
                 vocab_w_twos = [l[header.index('word')] for l in current_cond]
                 w_twos = [l[header.index('word')] for l in current_cond]
-                if args.lang == 'de' and ('cc100' in args.model or 'wiki' in args.model):
-                    vocab_w_twos = [w.lower() for w in vocab_w_twos]
-                    w_twos = [w.lower() for w in w_twos]
                 test_vocab = test_vocab.union(set(vocab_w_twos))
                 sims[key]= [(sub, (w_one, w_two), rt) for sub, w_one, w_two, rt in zip(subjects, w_ones, w_twos, log_rts)]
                 for p_ones, t in zip(w_ones, w_twos):
@@ -351,6 +334,7 @@ def read_phil(args):
 ### dataset 5: Catricalà et al.
 
 def read_it_social_quantity_tms(args):
+    print('\nCatricalà et al. - Semantic priming')
     lines = list()
     it_mapper = dict()
     prototypes = {'s' : set(), 'q' : set()}
